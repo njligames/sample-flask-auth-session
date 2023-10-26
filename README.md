@@ -11,7 +11,7 @@ Open-source Flask project that implements a simple authentication system using `
 
 ## TODO
 How it should work.
-The User goes to the main page.
+The User goes to the main page. (rewordme.html)
 The main page talks about what the site does and has the text area and button to reword the text.
 They can also login or register on the page.
 
@@ -22,6 +22,11 @@ When they try to reword:
         The user is directed to the index.html page where they can either login or register.
 
 When they try to register, they must purchase the subscription.
+
+* [] - create the beginning rewordme.html
+* [] - logic to determine if they have an account or not so that we know which way to redirect.
+* [] - insert the copy code for copying the code
+
 
 ## Build from sources
 
