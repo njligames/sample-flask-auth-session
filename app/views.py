@@ -4,7 +4,7 @@ Copyright (c) 2019 - present AppSeed.us
 """
 
 # Python modules
-import os, logging 
+import os, logging
 
 # Flask modules
 from flask               import render_template, request, url_for, redirect, send_from_directory
@@ -15,7 +15,8 @@ from jinja2              import TemplateNotFound
 # App modules
 from app        import app, lm, db, bc
 from app.models import Users
-from app.forms  import LoginForm, RegisterForm
+from app.forms  import LoginForm, RegisterForm, RewordMeForm
+from app.openai import OpenAI
 
 # provide login manager with load_user callback
 @lm.user_loader
@@ -31,14 +32,14 @@ def logout():
 # Register a new user
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    
+
     # declare the Registration Form
     form = RegisterForm(request.form)
 
     msg     = None
     success = False
 
-    if request.method == 'GET': 
+    if request.method == 'GET':
 
         return render_template( 'register.html', form=form, msg=msg )
 
@@ -47,8 +48,8 @@ def register():
 
         # assign form data to variables
         username = request.form.get('username', '', type=str)
-        password = request.form.get('password', '', type=str) 
-        email    = request.form.get('email'   , '', type=str) 
+        password = request.form.get('password', '', type=str)
+        email    = request.form.get('email'   , '', type=str)
 
         # filter User out of database through username
         user = Users.query.filter_by(user=username).first()
@@ -58,8 +59,8 @@ def register():
 
         if user or user_by_email:
             msg = 'Error: User exists!'
-        
-        else:         
+
+        else:
 
             pw_hash = bc.generate_password_hash(password)
 
@@ -67,18 +68,18 @@ def register():
 
             user.save()
 
-            msg     = 'User created, please <a href="' + url_for('login') + '">login</a>'     
+            msg     = 'User created, please <a href="' + url_for('login') + '">login</a>'
             success = True
 
     else:
-        msg = 'Input error'     
+        msg = 'Input error'
 
     return render_template( 'register.html', form=form, msg=msg, success=success )
 
 # Authenticate user
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    
+
     # Declare the login form
     form = LoginForm(request.form)
 
@@ -90,13 +91,13 @@ def login():
 
         # assign form data to variables
         username = request.form.get('username', '', type=str)
-        password = request.form.get('password', '', type=str) 
+        password = request.form.get('password', '', type=str)
 
         # filter User out of database through username
         user = Users.query.filter_by(user=username).first()
 
         if user:
-            
+
             if bc.check_password_hash(user.password, password):
                 login_user(user)
                 return redirect(url_for('index'))
@@ -106,6 +107,41 @@ def login():
             msg = "Unknown user"
 
     return render_template( 'login.html', form=form, msg=msg )
+
+# Register a new user
+@app.route('/rewordme', methods=['GET', 'POST'])
+def rewordme():
+
+    # declare the Registration Form
+    form = RewordMeForm(request.form)
+
+    msg     = None
+    success = False
+
+    if request.method == 'GET':
+        return render_template( 'rewordme.html', form=form, msg=msg )
+
+    # check if both http method is POST and form is valid on submit
+    # if form.validate_on_submit():
+    # assign form data to variables
+    disposition = request.form.get('disposition', '', type=str)
+    setup = request.form.get('setup', '', type=str)
+    requestString    = request.form.get('requestString'   , '', type=str)
+
+    openai_object = OpenAI(disposition, setup)
+
+    responseString = openai_object.rewordRequest(requestString)
+
+    print("***************************")
+    print(responseString)
+    print("***************************")
+    form.ResponseString=responseString
+
+    msg = responseString
+
+    success = True
+
+    return render_template( 'rewordme.html', form=form, msg=msg, success=success )
 
 # App main route + generic routing
 @app.route('/', defaults={'path': 'index'})
@@ -118,10 +154,10 @@ def index(path):
     try:
 
         return render_template( 'index.html' )
-    
+
     except TemplateNotFound:
         return render_template('page-404.html'), 404
-    
+
     except:
         return render_template('page-500.html'), 500
 

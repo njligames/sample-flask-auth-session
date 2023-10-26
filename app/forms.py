@@ -17,3 +17,13 @@ class RegisterForm(FlaskForm):
 	username    = StringField  (u'Username'  , validators=[DataRequired()])
 	password    = PasswordField(u'Password'  , validators=[DataRequired()])
 	email       = StringField  (u'Email'     , validators=[DataRequired(), Email()])
+
+class RewordMeForm(FlaskForm):
+	username      = StringField  (u'Username', validators=[DataRequired()])
+	email         = StringField  (u'Email'     , validators=[DataRequired(), Email()])
+	password      = PasswordField(u'Password'  , validators=[DataRequired()])
+	disposition   = StringField  (u'Disposition', validators=[DataRequired()])
+	setup         = StringField  (u'Setup', validators=[DataRequired()])
+	requestString = StringField  (u'RequestString', validators=[DataRequired()])
+	responseString = StringField  (u'ResponseString')
+

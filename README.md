@@ -9,6 +9,20 @@ Open-source Flask project that implements a simple authentication system using `
 
 <br />
 
+## TODO
+How it should work.
+The User goes to the main page.
+The main page talks about what the site does and has the text area and button to reword the text.
+They can also login or register on the page.
+
+When they try to reword:  
+    If the user is logged in then;  
+        The rewording works and goes to the reword.html
+    If the user is not logged in then;  
+        The user is directed to the index.html page where they can either login or register.
+
+When they try to register, they must purchase the subscription.
+
 ## Build from sources
 
 > **Step #1** - Clone sources (this repo)
