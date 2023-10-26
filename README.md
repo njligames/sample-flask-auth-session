@@ -23,9 +23,9 @@ When they try to reword:
 
 When they try to register, they must purchase the subscription.
 
-* [  ] - create the beginning rewordme.html
-* [  ] - logic to determine if they have an account or not so that we know which way to redirect.
-* [  ] - insert the copy code for copying the code
+* [ ] - create the beginning rewordme.html
+* [ ] - logic to determine if they have an account or not so that we know which way to redirect.
+* [ ] - insert the copy code for copying the code
 
 
 ## Build from sources
